@@ -5,7 +5,19 @@
   </Configs>
   <NewExtensions/>
   <sounds name="sound"/>
-  <sprites name="sprites"/>
+  <sprites name="sprites">
+    <sprite>sprites\spr_spear</sprite>
+    <sprite>sprites\spr_rock</sprite>
+    <sprite>sprites\spr_batfly</sprite>
+    <sprite>sprites\spr_nullpipe</sprite>
+    <sprite>sprites\spr_mobpipe</sprite>
+    <sprite>sprites\spr_newroom</sprite>
+    <sprite>sprites\spr_shortcutpipe</sprite>
+    <sprite>sprites\spr_regionpipe</sprite>
+    <sprite>sprites\spr_wormgrass</sprite>
+    <sprite>sprites\spr_garbagehole</sprite>
+    <sprite>sprites\spr_waterfall</sprite>
+  </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
