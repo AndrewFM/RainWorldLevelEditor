@@ -204,7 +204,7 @@
     <option_androidtv_use_test_ads>false</option_androidtv_use_test_ads>
     <option_argumenterrors>True</option_argumenterrors>
     <option_audioGroupCount>1</option_audioGroupCount>
-    <option_author></option_author>
+    <option_author>AndrewFM</option_author>
     <option_backimage>nil</option_backimage>
     <option_borderless>False</option_borderless>
     <option_changed>false</option_changed>
@@ -413,7 +413,7 @@
     <option_savekey>true</option_savekey>
     <option_scale>-1</option_scale>
     <option_scaleprogress>true</option_scaleprogress>
-    <option_sci_UseSCI>false</option_sci_UseSCI>
+    <option_sci_UseSCI>0</option_sci_UseSCI>
     <option_sci_serverLocation></option_sci_serverLocation>
     <option_screenkey>True</option_screenkey>
     <option_screenshotkey>true</option_screenshotkey>

@@ -1,2 +1,2 @@
 // Snap a screen point to a tile grid point
-return floor((argument[0]-ED_YOFF)/TILE_SIZE)*TILE_SIZE+ED_YOFF;
+return tileid_y(argument[0])*TILE_SIZE+ED_YOFF;

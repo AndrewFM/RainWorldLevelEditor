@@ -214,17 +214,17 @@ if ((linearr[0]-1) != global.map_tile_width*global.map_tile_height) {
     exit;    
 }
 count = 1;
-for(i=0; i&lt;global.map_tile_height; i+=1) {
-    for(j=0; j&lt;global.map_tile_width; j+=1) {
+for(i=0; i&lt;global.map_tile_width; i+=1) {
+    for(j=0; j&lt;global.map_tile_height; j+=1) {
         linearr2 = string_split2(linearr[count], ",");
-        global.tile_type[j,i] = real(linearr2[1]);
-        global.tile_object_flag[j,i] = 0;
-        global.has_wall[j,i] = false;
+        global.tile_type[i,j] = real(linearr2[1]);
+        global.tile_object_flag[i,j] = 0;
+        global.has_wall[i,j] = false;
         for(k=2; k&lt;=linearr2[0]; k+=1) {
             if (real(linearr2[k]) == 6) // Back Wall 
-                global.has_wall[j,i] = true;
+                global.has_wall[i,j] = true;
             else // Any other tile object other than back wall
-                global.tile_object_flag[j,i] |= get_bitoption(real(linearr2[k]));
+                global.tile_object_flag[i,j] |= get_bitoption(real(linearr2[k]));
         }
         count += 1;
     }

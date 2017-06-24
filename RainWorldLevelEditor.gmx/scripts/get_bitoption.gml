@@ -25,4 +25,39 @@ switch(argument[0]) {
         return $400;
     case 12:
         return $800;
+    case 13:
+        return $1000;
+    case 14:
+        return $2000;
+    case 15:
+        return $4000;
+    case 16:
+        return $8000;
+    case 17:
+        return $10000;
+    case 18:
+        return $20000;
+    case 19:
+        return $40000;
+    case 20:
+        return $80000;
+    case 21:
+        return $100000;
+    case 22:
+        return $200000;
+    case 23:
+        return $400000;
+    case 24:
+        return $800000;
+    case 25:
+        return $1000000;
+    case 26:
+        return $2000000;
+    case 27:
+        return $4000000;
+    case 28:
+        return $8000000;
+    default:
+        show_error("Bitoption out of range", false);
 }
+return $0;

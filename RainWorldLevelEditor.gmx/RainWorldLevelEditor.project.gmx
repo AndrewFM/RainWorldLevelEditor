@@ -10,10 +10,12 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\unload_map_images.gml</script>
-    <script>scripts\snap_x.gml</script>
-    <script>scripts\snap_y.gml</script>
     <script>scripts\string_split.gml</script>
     <script>scripts\get_bitoption.gml</script>
+    <script>scripts\snap_x.gml</script>
+    <script>scripts\snap_y.gml</script>
+    <script>scripts\tileid_x.gml</script>
+    <script>scripts\tileid_y.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_viewinit</object>

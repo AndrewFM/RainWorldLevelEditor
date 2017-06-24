@@ -25,13 +25,15 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Initialize Editor Room Objects
+            <string>// global editor variables
+global.map_image_count = 0;
+global.map_tile_width = 0;
+global.map_tile_height = 0;
+room_speed = 60; // 60 FPS!!!!!!!
+
+/// Initialize Editor Room Objects
 instance_create(0,0,obj_HUD);
 instance_create(0,0,obj_canvas);
-
-// global editor variables
-global.map_image_count = 0;
-room_speed = 60; // 60 FPS!!!!!!!
 </string>
           </argument>
         </arguments>
