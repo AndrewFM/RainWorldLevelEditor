@@ -13,6 +13,7 @@
     <script>scripts\snap_x.gml</script>
     <script>scripts\snap_y.gml</script>
     <script>scripts\string_split.gml</script>
+    <script>scripts\get_bitoption.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_viewinit</object>
@@ -24,11 +25,31 @@
     <room>rooms\rm_viewinit</room>
     <room>rooms\rm_editor</room>
   </rooms>
-  <constants number="4">
+  <constants number="24">
+    <constant name="EXIT_REGIONAL">12</constant>
+    <constant name="WORM_GRASS">11</constant>
+    <constant name="GARBAGE_HOLE">10</constant>
+    <constant name="EXIT_SCAV">9</constant>
+    <constant name="WATERFALL">8</constant>
+    <constant name="BAT_NEST">7</constant>
+    <constant name="WALL">6</constant>
+    <constant name="EXIT_MONSTER">5</constant>
+    <constant name="EXIT_ROOM">4</constant>
+    <constant name="PIPE_PATH">3</constant>
+    <constant name="HOR_BEAM">2</constant>
+    <constant name="VERT_BEAM">1</constant>
+    <constant name="PIPE_ENT">4</constant>
+    <constant name="FLOOR">3</constant>
+    <constant name="SLOPE">2</constant>
+    <constant name="SOLID">1</constant>
+    <constant name="AIR">0</constant>
     <constant name="TILE_SIZE">20</constant>
     <constant name="HUD_HEIGHT">80</constant>
     <constant name="ED_XOFF">0</constant>
     <constant name="ED_YOFF">160</constant>
+    <constant name="EDIT_OBJECT">2</constant>
+    <constant name="EDIT_WALL">1</constant>
+    <constant name="EDIT_TILE">0</constant>
   </constants>
   <help>
     <rtf>help.rtf</rtf>
