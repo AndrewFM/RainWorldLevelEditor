@@ -90,7 +90,7 @@ view_yview[1] = clamp(view_yview[1], ED_YOFF, max(ED_YOFF, ED_YOFF+canvas_height
 if (global.map_image_count &gt; 0) {
     canvas_width = 0;
     for(i=0; i&lt;global.map_image_count; i+=1) {
-        draw_sprite_ext(global.map_images[i], 0, ED_XOFF+canvas_width, ED_YOFF, 1, 1, 0, c_white, 0.5);
+        draw_sprite_ext(global.map_images[i], 0, ED_XOFF+canvas_width, ED_YOFF, 1, 1, 0, c_white, 1);
         canvas_width += sprite_get_width(global.map_images[i]);
         canvas_height = max(canvas_height, sprite_get_height(global.map_images[i]));
     }

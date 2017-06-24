@@ -12,6 +12,7 @@
     <script>scripts\unload_map_images.gml</script>
     <script>scripts\snap_x.gml</script>
     <script>scripts\snap_y.gml</script>
+    <script>scripts\string_split.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_viewinit</object>
