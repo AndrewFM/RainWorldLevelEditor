@@ -35,6 +35,7 @@
       <script>scripts\button_object_edit_mode.gml</script>
       <script>scripts\button_view_mode.gml</script>
     </scripts>
+    <script>scripts\get_pixellocfromred.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_default</font>
