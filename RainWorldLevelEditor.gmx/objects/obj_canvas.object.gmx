@@ -115,14 +115,7 @@ if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*T
                         break;
                     }    
                 }
-                // Delete the spear and shift all subsequent spears down in the array list.
-                if (spear_id != -1) {
-                    for(i=spear_id; i&lt;global.spear_count-1; i+=1) {
-                        global.spear_tilex[i] = global.spear_tilex[i+1];
-                        global.spear_tiley[i] = global.spear_tiley[i+1];
-                    }
-                    global.spear_count -= 1;
-                }
+                delete_spear(spear_id);
             }
             else if (global.tile_object_types[global.object_selection] == ROCK_SPAWN) {
                 // Find the rock
@@ -133,14 +126,7 @@ if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*T
                         break;
                     }    
                 }
-                // Delete the rock and shift all subsequent rocks down in the array list.
-                if (rock_id != -1) {
-                    for(i=rock_id; i&lt;global.rock_count-1; i+=1) {
-                        global.rock_tilex[i] = global.rock_tilex[i+1];
-                        global.rock_tiley[i] = global.rock_tiley[i+1];
-                    }
-                    global.rock_count -= 1;
-                }
+                delete_rock(rock_id);
             }
             else
                 global.tile_object_flag[tileid_x(mouse_x), tileid_y(mouse_y)] &amp;= get_invert_bitoption(global.tile_object_types[global.object_selection]);

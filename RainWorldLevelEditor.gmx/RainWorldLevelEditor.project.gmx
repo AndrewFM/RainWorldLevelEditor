@@ -21,6 +21,14 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
+    <scripts name="Buttons">
+      <script>scripts\button_tile_edit_mode.gml</script>
+      <script>scripts\button_wall_edit_mode.gml</script>
+      <script>scripts\button_object_edit_mode.gml</script>
+      <script>scripts\button_view_mode.gml</script>
+      <script>scripts\button_resize_map.gml</script>
+      <script>scripts\button_properties_edit_mode.gml</script>
+    </scripts>
     <script>scripts\unload_map_images.gml</script>
     <script>scripts\string_split.gml</script>
     <script>scripts\get_bitoption.gml</script>
@@ -31,16 +39,13 @@
     <script>scripts\tileid_y.gml</script>
     <script>scripts\render_tile_object_icon.gml</script>
     <script>scripts\render_tile_type_icon.gml</script>
-    <scripts name="Buttons">
-      <script>scripts\button_tile_edit_mode.gml</script>
-      <script>scripts\button_wall_edit_mode.gml</script>
-      <script>scripts\button_object_edit_mode.gml</script>
-      <script>scripts\button_view_mode.gml</script>
-    </scripts>
     <script>scripts\get_pixellocfromred.gml</script>
     <script>scripts\clamp_wrap.gml</script>
     <script>scripts\bitoption_to_savstring.gml</script>
     <script>scripts\string_precision.gml</script>
+    <script>scripts\delete_spear.gml</script>
+    <script>scripts\delete_rock.gml</script>
+    <script>scripts\purge_oob_objects.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_default</font>
