@@ -33,6 +33,35 @@ global.spear_count = 0;
 global.rock_count = 0;
 room_speed = 60; // 60 FPS!!!!!!!
 
+global.tile_object_types[0] = VERT_BEAM;
+global.tile_object_types[1] = HOR_BEAM;
+global.tile_object_types[2] = EXIT_ROOM;
+global.tile_object_types[3] = EXIT_MONSTER
+global.tile_object_types[4] = EXIT_REGIONAL;
+global.tile_object_types[5] = EXIT_SCAV;
+global.tile_object_types[6] = PIPE_PATH;
+global.tile_object_types[7] = GARBAGE_HOLE;
+global.tile_object_types[8] = BAT_NEST;
+global.tile_object_types[9] = WORM_GRASS;
+global.tile_object_types[10] = WATERFALL;
+global.tile_object_types[11] = SPEAR_SPAWN;
+global.tile_object_types[12] = ROCK_SPAWN;
+global.tile_object_captions[0] = "Vertical Pole";
+global.tile_object_captions[1] = "Horizontal Pole";
+global.tile_object_captions[2] = "Pipe End (to New Room)";
+global.tile_object_captions[3] = "Pipe End (Monster Den)";
+global.tile_object_captions[4] = "Pipe End (Monster Migration)";
+global.tile_object_captions[5] = "Pipe End (Monster Shortcut)";
+global.tile_object_captions[6] = "Pipe Path";
+global.tile_object_captions[7] = "Garbage Worm Den";
+global.tile_object_captions[8] = "Batfly Nest";
+global.tile_object_captions[9] = "Worm Grass";
+global.tile_object_captions[10] = "Waterfall Source";
+global.tile_object_captions[11] = "Spear Spawner";
+global.tile_object_captions[12] = "Rock Spawner";
+global.tile_object_count = 11;
+global.tile_object_count_special = 13;
+
 /// Initialize Editor Room Objects
 instance_create(0,0,obj_HUD);
 instance_create(0,0,obj_canvas);
@@ -54,6 +83,7 @@ global.button[3] = instance_create(0,0,obj_button);
 global.button[3].button_text = "Object Edit Mode";
 global.button[3].button_script = button_object_edit_mode;
 global.button_count = 4;
+global.object_selection = 0;
 global.current_mode = EDIT_PREVIEW;
 
 room_caption = "Rain World Level Editor";

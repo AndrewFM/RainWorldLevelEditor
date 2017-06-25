@@ -66,6 +66,18 @@ else {
 }
 
 draw_set_color(c_black);
+if (global.current_mode == EDIT_OBJECT) {
+    draw_set_halign(fa_right);
+    draw_text(view_xview[0]+view_wview[0]-5, y0+10+string_height("A"), "Selected Object: "+global.tile_object_captions[global.object_selection]);
+    draw_set_halign(fa_left);
+    for(i=0; i&lt;global.tile_object_count_special; i+=1) {
+        if (i != global.object_selection)
+            draw_set_alpha(0.15);
+        render_tile_object_icon(global.tile_object_types[i], view_xview[0]+view_wview[0]-5-(i+1)*(TILE_SIZE+5), y0+15+string_height("A")*2);
+        draw_set_alpha(1);
+    }
+}
+
 draw_line_width(x0, y0+view_hview[0], x0+view_wview[0], y0+view_hview[0], 5);
 </string>
           </argument>

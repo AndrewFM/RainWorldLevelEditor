@@ -8,40 +8,6 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
-    <event eventtype="0" enumb="0">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>tile_object_types[0] = VERT_BEAM;
-tile_object_types[1] = HOR_BEAM;
-tile_object_types[2] = EXIT_ROOM;
-tile_object_types[3] = EXIT_MONSTER
-tile_object_types[4] = EXIT_REGIONAL;
-tile_object_types[5] = EXIT_SCAV;
-tile_object_types[6] = PIPE_PATH;
-tile_object_types[7] = GARBAGE_HOLE;
-tile_object_types[8] = BAT_NEST;
-tile_object_types[9] = WORM_GRASS;
-tile_object_types[10] = WATERFALL;
-tile_object_count = 11;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -60,7 +26,6 @@ tile_object_count = 11;
           <argument>
             <kind>1</kind>
             <string>/// Move canvas camera with arrow keys
-
 var move_speed = 16;
 if (keyboard_check(vk_up))
     view_yview[1] -= move_speed;
@@ -74,6 +39,102 @@ if (keyboard_check(vk_right))
 // clamp canvas camera position to bounds of the canvas
 view_xview[1] = clamp(view_xview[1], ED_XOFF, max(ED_XOFF, ED_XOFF+(global.map_tile_width*TILE_SIZE)-view_wview[1]));
 view_yview[1] = clamp(view_yview[1], ED_YOFF, max(ED_YOFF, ED_YOFF+(global.map_tile_height*TILE_SIZE)-view_hview[1]));
+
+// Use scroll wheel to switch between cursor options
+if (mouse_wheel_up() || keyboard_check_pressed(vk_pageup)) {
+    if (global.current_mode == EDIT_OBJECT) 
+        global.object_selection = clamp_wrap(global.object_selection+1, 0, global.tile_object_count_special-1);
+}
+
+if (mouse_wheel_down() || keyboard_check_pressed(vk_pagedown)) {
+    if (global.current_mode == EDIT_OBJECT) 
+        global.object_selection = clamp_wrap(global.object_selection-1, 0, global.tile_object_count_special-1);
+}
+
+if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*TILE_SIZE 
+ &amp;&amp; mouse_y &gt; ED_YOFF &amp;&amp; mouse_y &lt; ED_YOFF+global.map_tile_height*TILE_SIZE) {
+    // Place objects at cursor
+    if (mouse_check_button(mb_left)) {
+        if (global.current_mode == EDIT_OBJECT) {
+            if (global.tile_object_types[global.object_selection] == SPEAR_SPAWN) {
+                // First check that a spear is not already at this position.
+                var can_place = true;
+                for(i=0; i&lt;global.spear_count; i+=1) {
+                    if (global.spear_tilex[i] == tileid_x(mouse_x) &amp;&amp; global.spear_tiley[i] == tileid_y(mouse_y)) {
+                        can_place = false;
+                        break;
+                    }    
+                }
+                if (can_place) {
+                    global.spear_tilex[global.spear_count] = tileid_x(mouse_x);
+                    global.spear_tiley[global.spear_count] = tileid_y(mouse_y); 
+                    global.spear_count += 1;
+                }
+            }
+            else if (global.tile_object_types[global.object_selection] == ROCK_SPAWN) {
+                // First check that a rock is not already at this position.
+                var can_place = true;
+                for(i=0; i&lt;global.rock_count; i+=1) {
+                    if (global.rock_tilex[i] == tileid_x(mouse_x) &amp;&amp; global.rock_tiley[i] == tileid_y(mouse_y)) {
+                        can_place = false;
+                        break;
+                    }    
+                }
+                if (can_place) {
+                    global.rock_tilex[global.rock_count] = tileid_x(mouse_x);
+                    global.rock_tiley[global.rock_count] = tileid_y(mouse_y); 
+                    global.rock_count += 1;
+                }
+            }
+            else
+                global.tile_object_flag[tileid_x(mouse_x), tileid_y(mouse_y)] |= get_bitoption(global.tile_object_types[global.object_selection]);
+        }
+    }
+    
+    // Delete objects at cursor
+    if (mouse_check_button(mb_right)) {
+        if (global.current_mode == EDIT_OBJECT) {
+            if (global.tile_object_types[global.object_selection] == SPEAR_SPAWN) {
+                // Find the spear
+                var spear_id = -1;
+                for(i=0; i&lt;global.spear_count; i+=1) {
+                    if (global.spear_tilex[i] == tileid_x(mouse_x) &amp;&amp; global.spear_tiley[i] == tileid_y(mouse_y)) {
+                        spear_id = i;
+                        break;
+                    }    
+                }
+                // Delete the spear and shift all subsequent spears down in the array list.
+                if (spear_id != -1) {
+                    for(i=spear_id; i&lt;global.spear_count-1; i+=1) {
+                        global.spear_tilex[i] = global.spear_tilex[i+1];
+                        global.spear_tiley[i] = global.spear_tiley[i+1];
+                    }
+                    global.spear_count -= 1;
+                }
+            }
+            else if (global.tile_object_types[global.object_selection] == ROCK_SPAWN) {
+                // Find the rock
+                var rock_id = -1;
+                for(i=0; i&lt;global.rock_count; i+=1) {
+                    if (global.rock_tilex[i] == tileid_x(mouse_x) &amp;&amp; global.rock_tiley[i] == tileid_y(mouse_y)) {
+                        rock_id = i;
+                        break;
+                    }    
+                }
+                // Delete the rock and shift all subsequent rocks down in the array list.
+                if (rock_id != -1) {
+                    for(i=rock_id; i&lt;global.rock_count-1; i+=1) {
+                        global.rock_tilex[i] = global.rock_tilex[i+1];
+                        global.rock_tiley[i] = global.rock_tiley[i+1];
+                    }
+                    global.rock_count -= 1;
+                }
+            }
+            else
+                global.tile_object_flag[tileid_x(mouse_x), tileid_y(mouse_y)] &amp;= get_invert_bitoption(global.tile_object_types[global.object_selection]);
+        }           
+    }
+}
 </string>
           </argument>
         </arguments>
@@ -169,10 +230,6 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 var tx, ty, has_exit;
 if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_yellow);
-    if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
-        draw_set_alpha(0.75);
-    else
-        draw_set_alpha(0.2);
     for(i=tile_minx; i&lt;=tile_maxx; i+=1) {
         for(j=tile_miny; j&lt;=tile_maxy; j+=1) {
             if (global.tile_object_flag[i,j] == 0)
@@ -180,23 +237,23 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
             tx = ED_XOFF+i*TILE_SIZE;
             ty = ED_YOFF+j*TILE_SIZE;
             has_exit = false;
-            for(k=0; k&lt;tile_object_count; k+=1) {
-                if (global.tile_object_flag[i,j] &amp; get_bitoption(tile_object_types[k]) == get_bitoption(tile_object_types[k])) {
-                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit) {
-                        if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+            for(k=0; k&lt;global.tile_object_count; k+=1) {
+                if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == global.tile_object_types[k]))
+                    draw_set_alpha(0.75);
+                else
+                    draw_set_alpha(0.2);
+                if (global.tile_object_flag[i,j] &amp; get_bitoption(global.tile_object_types[k]) == get_bitoption(global.tile_object_types[k])) {
+                    if (global.tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit) {
+                        if (global.current_mode == EDIT_PREVIEW)
                             draw_set_alpha(0.25);
+                        else if (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == global.tile_object_types[k])
+                            draw_set_alpha(0.75);
                         else
                             draw_set_alpha(0.1);
                     }
-                    render_tile_object_icon(tile_object_types[k], tx, ty);
-                    if (tile_object_types[k] == EXIT_MONSTER || tile_object_types[k] == EXIT_REGIONAL || tile_object_types[k] == EXIT_ROOM || tile_object_types[k] == EXIT_SCAV)
+                    render_tile_object_icon(global.tile_object_types[k], tx, ty);
+                    if (global.tile_object_types[k] == EXIT_MONSTER || global.tile_object_types[k] == EXIT_REGIONAL || global.tile_object_types[k] == EXIT_ROOM || global.tile_object_types[k] == EXIT_SCAV)
                         has_exit = true;
-                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit) {
-                        if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
-                            draw_set_alpha(0.75);
-                        else
-                            draw_set_alpha(0.2);
-                    }
                 }
             }
         }
@@ -204,28 +261,39 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 }
 
 // Draw Spears/Rocks
-if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == SPEAR_SPAWN))
     draw_set_alpha(0.75);
 else
     draw_set_alpha(0.1);
 for(i=0; i&lt;global.spear_count; i+=1) {
     tx = ED_XOFF+global.spear_tilex[i]*TILE_SIZE;
     ty = ED_YOFF+global.spear_tiley[i]*TILE_SIZE;
-    draw_circle(tx+TILE_SIZE/2, ty+TILE_SIZE/2, TILE_SIZE/2, true);
-    draw_sprite_ext(spr_spear, 0, tx, ty, 1, 1, 0, draw_get_color(), draw_get_alpha());   
+    render_tile_object_icon(SPEAR_SPAWN, tx, ty);   
 }
+if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == ROCK_SPAWN))
+    draw_set_alpha(0.75);
+else
+    draw_set_alpha(0.1);
 for(i=0; i&lt;global.rock_count; i+=1) {
     tx = ED_XOFF+global.rock_tilex[i]*TILE_SIZE;
     ty = ED_YOFF+global.rock_tiley[i]*TILE_SIZE;
-    draw_circle(tx+TILE_SIZE/2, ty+TILE_SIZE/2, TILE_SIZE/2, true);
-    draw_sprite_ext(spr_rock, 0, tx, ty, 1, 1, 0, draw_get_color(), draw_get_alpha());   
+    render_tile_object_icon(ROCK_SPAWN, tx, ty);  
 }
 
-// Draw a rectangular mark over the tile currently being hovered on.
-draw_set_color(c_green);
-draw_set_alpha(0.5);
-if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*TILE_SIZE &amp;&amp; mouse_y &gt; ED_YOFF &amp;&amp; mouse_y &lt; ED_YOFF+global.map_tile_height*TILE_SIZE) {
-    draw_rectangle(snap_x(mouse_x), snap_y(mouse_y), snap_x(mouse_x)+TILE_SIZE, snap_y(mouse_y)+TILE_SIZE, false);
+// Draw our editing cursor over the tile currently being hovered on.
+if (global.current_mode == EDIT_OBJECT) {
+    draw_set_color(c_lime);
+    draw_set_alpha(1);
+} else {
+    draw_set_color(c_green);
+    draw_set_alpha(0.5);
+}
+if (global.current_mode != EDIT_PREVIEW &amp;&amp; mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*TILE_SIZE 
+ &amp;&amp; mouse_y &gt; ED_YOFF &amp;&amp; mouse_y &lt; ED_YOFF+global.map_tile_height*TILE_SIZE) {
+    if (global.current_mode == EDIT_WALL)
+        draw_rectangle(snap_x(mouse_x), snap_y(mouse_y), snap_x(mouse_x)+TILE_SIZE, snap_y(mouse_y)+TILE_SIZE, false);
+    else if (global.current_mode == EDIT_OBJECT)
+        render_tile_object_icon(global.tile_object_types[global.object_selection], snap_x(mouse_x), snap_y(mouse_y));
     window_set_cursor(cr_none);
 } else
     window_set_cursor(cr_arrow);

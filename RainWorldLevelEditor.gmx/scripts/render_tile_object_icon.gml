@@ -46,4 +46,12 @@ switch (argument[0]) {
     case PIPE_PATH:
         draw_rectangle(tx+TILE_SIZE*0.35, ty+TILE_SIZE*0.35, tx+TILE_SIZE*0.65, ty+TILE_SIZE*0.65, false);
         break;
+    case SPEAR_SPAWN:
+        draw_circle(tx+TILE_SIZE/2, ty+TILE_SIZE/2, TILE_SIZE/2, true);
+        draw_sprite_ext(spr_spear, 0, tx, ty, 1, 1, 0, draw_get_color(), draw_get_alpha());   
+        break;
+    case ROCK_SPAWN:
+        draw_circle(tx+TILE_SIZE/2, ty+TILE_SIZE/2, TILE_SIZE/2, true);
+        draw_sprite_ext(spr_rock, 0, tx, ty, 1, 1, 0, draw_get_color(), draw_get_alpha());  
+        break;
 }
