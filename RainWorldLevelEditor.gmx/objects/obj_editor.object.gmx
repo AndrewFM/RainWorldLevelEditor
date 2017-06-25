@@ -31,6 +31,7 @@ global.map_tile_width = 0;
 global.map_tile_height = 0;
 global.spear_count = 0;
 global.rock_count = 0;
+global.water_height = -1;
 room_speed = 60; // 60 FPS!!!!!!!
 
 global.tile_object_types[0] = VERT_BEAM;
@@ -103,6 +104,19 @@ global.button[5].button_text = "Resize Map";
 global.button[5].button_script = button_resize_map;
 
 global.button_count = 6;
+
+global.check[0] = instance_create(0,0,obj_checkmark);
+global.check[0].checkmark_text = "Water enabled";
+global.check[0].toggle_script = check_waterlevel_enable;
+global.check[0].untoggle_script = check_waterlevel_disable;
+
+global.check[1] = instance_create(0,0,obj_checkmark);
+global.check[1].checkmark_text = "Water in foreground";
+global.check[1].toggle_script = check_waterfore_enable;
+global.check[1].untoggle_script = check_waterfore_disable;
+
+global.check_count = 2;
+
 global.object_selection = 0;
 global.tile_type_selection = 0;
 global.current_mode = EDIT_PREVIEW;

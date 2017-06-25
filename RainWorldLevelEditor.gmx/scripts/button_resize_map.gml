@@ -4,8 +4,13 @@ old_width = global.map_tile_width;
 old_height = global.map_tile_height;
 
 new_width = get_integer("Enter the new tile width.", old_width);
+if (new_width <= 0)
+    return 0;
+    
 new_height = get_integer("Enter the new tile height.", old_height);
-
+if (new_height <= 0)
+    return 0;
+    
 if (new_width < old_width || new_height < old_height) {
     resp = show_question("The new size is smaller than the old size! Data will be lost, and there is no undo for this action. Really continue?");
     if (resp == false)

@@ -8,6 +8,30 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
+    <event eventtype="0" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>water_hovering = false;
+water_selected = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -261,6 +285,43 @@ for(i=0; i&lt;global.rock_count; i+=1) {
     tx = ED_XOFF+global.rock_tilex[i]*TILE_SIZE;
     ty = ED_YOFF+global.rock_tiley[i]*TILE_SIZE;
     render_tile_object_icon(ROCK_SPAWN, tx, ty);  
+}
+
+// Draw water line
+if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_PROPERTIES) {
+    if (global.water_height &gt; 0) {
+        var wliney, wx1, wy1, wx2, wy2;
+        wliney = ED_YOFF+global.map_tile_height*TILE_SIZE-global.water_height*TILE_SIZE;
+        wx1 = view_xview[1];
+        wx2 = view_xview[1]+view_wview[1];
+        wy1 = wliney;
+        wy2 = ED_YOFF+global.map_tile_height*TILE_SIZE;
+        
+        if (global.current_mode == EDIT_PROPERTIES &amp;&amp; mouse_x &gt;= wx1 &amp;&amp; mouse_x &lt;= wx2 &amp;&amp; mouse_y &gt;= wy1 &amp;&amp; mouse_y &lt;= wy2) {
+            water_hovering = true;
+            if (mouse_check_button(mb_left))
+                water_selected = true;
+        }
+        else
+            water_hovering = false;
+        if (!mouse_check_button(mb_left) || global.current_mode != EDIT_PROPERTIES)
+            water_selected = false;
+            
+        if (water_hovering || water_selected) {
+            draw_set_color(c_blue);
+            draw_set_alpha(0.4);
+            if (water_selected)
+                global.water_height = clamp(global.map_tile_height-tileid_y(mouse_y), 1, global.map_tile_height);
+        }
+        else {
+            draw_set_color(c_blue);
+            draw_set_alpha(0.25);
+        }
+        draw_rectangle(wx1, wy1, wx2, wy2, false);
+        draw_set_color(c_aqua);
+        draw_set_alpha(0.75);
+        draw_line_width(wx1, wy1, wx2, wy1, 5);
+    }
 }
 
 // Draw our editing cursor over the tile currently being hovered on.

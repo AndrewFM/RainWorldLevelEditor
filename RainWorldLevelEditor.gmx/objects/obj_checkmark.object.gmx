@@ -25,7 +25,50 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>button_text = "undefined";
+            <string>checkmark_text = "undefined";
+toggled = false;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="3" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>hx1 = x;
+hy1 = y;
+hx2 = x+string_height("A");
+hy2 = y+string_height("A");
+checkmark_width = (hx2-hx1)+5+string_width(checkmark_text);
+
+if (visible &amp;&amp; mouse_x &gt;= hx1 &amp;&amp; mouse_x &lt;= hx2 &amp;&amp; mouse_y &gt;= hy1 &amp;&amp; mouse_y &lt;= hy2) {
+    hovering = true;
+    if (mouse_check_button_pressed(mb_left)) {
+        if (toggled) {
+            script_execute(untoggle_script);
+            toggled = false;
+        } else {
+            script_execute(toggle_script);
+            toggled = true;
+        } 
+    }
+}
+else
+    hovering = false;
 </string>
           </argument>
         </arguments>
@@ -48,33 +91,17 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>button_width = string_width(button_text)+10;
-hx1 = x;
-hy1 = y;
-hx2 = x+button_width;
-hy2 = y+string_height("A");
-
-if (visible &amp;&amp; mouse_x &gt;= hx1 &amp;&amp; mouse_x &lt;= hx2 &amp;&amp; mouse_y &gt;= hy1 &amp;&amp; mouse_y &lt;= hy2) {
-    hovering = true;
-    if (mouse_check_button_pressed(mb_left))
-        script_execute(button_script);
-}
-else
-    hovering = false;
-
-if (hovering)
+            <string>if (hovering)
     draw_set_color(c_ltgray);
 else
     draw_set_color(c_gray);
-draw_roundrect(hx1, hy1, hx2, hy2, false);
-draw_set_color(c_black);
-draw_roundrect(hx1, hy1, hx2, hy2, true);
-draw_set_halign(fa_center);
+draw_rectangle(hx1, hy1, hx2, hy2, true);
 draw_set_valign(fa_middle);
-draw_text((hx1+hx2)/2, (hy1+hy2)/2, button_text);
-draw_set_halign(fa_left);
+draw_set_color(c_black);
+draw_text(hx2+5, (hy1+hy2)/2, checkmark_text);
 draw_set_valign(fa_top);
-
+if (toggled)
+    draw_sprite_ext(spr_X, 0, (hx1+hx2)/2, (hy1+hy2)/2, 1, 1, 0, c_black, 1);
 </string>
           </argument>
         </arguments>

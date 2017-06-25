@@ -6,3 +6,4 @@ global.map_tile_width = 0;
 global.map_tile_height = 0;
 global.spear_count = 0;
 global.rock_count = 0;
+global.water_height = -1;

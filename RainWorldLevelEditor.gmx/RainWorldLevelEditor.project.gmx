@@ -9,7 +9,7 @@
     <sprite>sprites\spr_spear</sprite>
     <sprite>sprites\spr_rock</sprite>
     <sprite>sprites\spr_batfly</sprite>
-    <sprite>sprites\spr_nullpipe</sprite>
+    <sprite>sprites\spr_X</sprite>
     <sprite>sprites\spr_mobpipe</sprite>
     <sprite>sprites\spr_newroom</sprite>
     <sprite>sprites\spr_shortcutpipe</sprite>
@@ -21,13 +21,17 @@
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
-    <scripts name="Buttons">
+    <scripts name="Callback Functions">
       <script>scripts\button_tile_edit_mode.gml</script>
       <script>scripts\button_wall_edit_mode.gml</script>
       <script>scripts\button_object_edit_mode.gml</script>
       <script>scripts\button_view_mode.gml</script>
       <script>scripts\button_resize_map.gml</script>
       <script>scripts\button_properties_edit_mode.gml</script>
+      <script>scripts\check_waterfore_enable.gml</script>
+      <script>scripts\check_waterfore_disable.gml</script>
+      <script>scripts\check_waterlevel_enable.gml</script>
+      <script>scripts\check_waterlevel_disable.gml</script>
     </scripts>
     <script>scripts\unload_map_images.gml</script>
     <script>scripts\string_split.gml</script>
@@ -56,13 +60,14 @@
     <object>objects\obj_canvas</object>
     <object>objects\obj_editor</object>
     <object>objects\obj_slider</object>
+    <object>objects\obj_checkmark</object>
     <object>objects\obj_button</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_viewinit</room>
     <room>rooms\rm_editor</room>
   </rooms>
-  <constants number="27">
+  <constants number="28">
     <constant name="ROCK_SPAWN">14</constant>
     <constant name="SPEAR_SPAWN">13</constant>
     <constant name="EXIT_REGIONAL">12</constant>
@@ -86,6 +91,7 @@
     <constant name="HUD_HEIGHT">80</constant>
     <constant name="ED_XOFF">0</constant>
     <constant name="ED_YOFF">160</constant>
+    <constant name="EDIT_PROPERTIES">4</constant>
     <constant name="EDIT_PREVIEW">3</constant>
     <constant name="EDIT_OBJECT">2</constant>
     <constant name="EDIT_WALL">1</constant>
