@@ -28,6 +28,7 @@
     <script>scripts\snap_y.gml</script>
     <script>scripts\tileid_x.gml</script>
     <script>scripts\tileid_y.gml</script>
+    <script>scripts\get_pixellocfromred.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_viewinit</object>
