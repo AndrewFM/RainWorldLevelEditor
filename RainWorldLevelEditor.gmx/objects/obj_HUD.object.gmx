@@ -8,6 +8,31 @@
   <parentName>&lt;undefined&gt;</parentName>
   <maskName>&lt;undefined&gt;</maskName>
   <events>
+    <event eventtype="0" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>/// Initialize variables
+
+global.map_name = ""
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
@@ -126,106 +151,110 @@ draw_line_width(x0, y0+view_hview[0], x0+view_wview[0], y0+view_hview[0], 5);
             <kind>1</kind>
             <string>/// Save a map file
 var img_filename, img_index, temp_name, base_filename, success, file, fwrite, line, linearr, linearr2, count, has_wall;
-
-do {
-    success = false;
-    file = get_save_filename("text file|*.txt", global.cur_map_file);
-    if (string_pos("_Settings", file) != 0) {
-        // User tried loading one of the Rain World map settings files,
-        // rather than the map data file. Warn them and have them choose again.
-        show_message("Selected file was a map properties file, not a map data file. Please choose one of the text files that does not have 'Settings' in its name.");
-    } else
-        success = true;
-} until (success || file == "")
-
-if (file == "")
-    exit; // User canceled the loading dialog.
-
-// Save images. Something to implement later.
-
-// Open the map .txt file for writing
-fwrite = file_text_open_write(file);
-
-// Line 1: Map Name
-file_text_write_string(fwrite, global.map_name);
-file_text_writeln(fwrite);
-
-// Line 2: Map size and water line
-file_text_write_string(fwrite, (string(global.map_tile_width) + "*"
-    + string(global.map_tile_height) + "|"
-    + string(global.water_height) + "|"
-    + string(global.water_foreground)));
-file_text_writeln(fwrite);
-
-// Line 3: Light Direction
-file_text_write_string(fwrite, string_precision(global.light_x, 4) + "*"
-    + string_precision(global.light_y, 4) + "|" + "0" + "|" + "0");
-file_text_writeln(fwrite);
-
-// Line 4: Camera Positions
-for(i=0; i&lt;global.map_image_count; i+=1) {
-    file_text_write_string(fwrite, string(global.camera_x[i]) + ","
-        + string(global.camera_y[i]));
-    if((i + 1 &lt; global.map_image_count)) {
-        file_text_write_string(fwrite, "|");
+if(global.map_name != "") {
+    do {
+        success = false;
+        file = get_save_filename("text file|*.txt", global.cur_map_file);
+        if (string_pos("_Settings", file) != 0) {
+            // User tried loading one of the Rain World map settings files,
+            // rather than the map data file. Warn them and have them choose again.
+            show_message("Selected file was a map properties file, not a map data file. Please choose one of the text files that does not have 'Settings' in its name.");
+        } else
+            success = true;
+    } until (success || file == "")
+    
+    if (file == "")
+        exit; // User canceled the loading dialog.
+    
+    // Save images. Something to implement later.
+    
+    // Open the map .txt file for writing
+    fwrite = file_text_open_write(file);
+    
+    // Line 1: Map Name
+    file_text_write_string(fwrite, global.map_name);
+    file_text_writeln(fwrite);
+    
+    // Line 2: Map size and water line
+    file_text_write_string(fwrite, (string(global.map_tile_width) + "*"
+        + string(global.map_tile_height) + "|"
+        + string(global.water_height) + "|"
+        + string(global.water_foreground)));
+    file_text_writeln(fwrite);
+    
+    // Line 3: Light Direction
+    file_text_write_string(fwrite, string_precision(global.light_x, 4) + "*"
+        + string_precision(global.light_y, 4) + "|" + "0" + "|" + "0");
+    file_text_writeln(fwrite);
+    
+    // Line 4: Camera Positions
+    for(i=0; i&lt;global.map_image_count; i+=1) {
+        file_text_write_string(fwrite, string(global.camera_x[i]) + ","
+            + string(global.camera_y[i]));
+        if((i + 1 &lt; global.map_image_count)) {
+            file_text_write_string(fwrite, "|");
+        }
     }
-}
-file_text_writeln(fwrite);
-
-// Line 5: Border Type
-file_text_write_string(fwrite, "Border: " + global.border_type);
-file_text_writeln(fwrite);
-
-// Line 6: Spear/Rock Positions
-for(i=0; i&lt;global.spear_count; i+=1) {
-    file_text_write_string(fwrite, "1," + string(global.spear_tilex[i])
-        + "," + string(global.spear_tiley[i]) + "|");
-}
-for(i=0; i&lt;global.rock_count; i+=1) {
-    file_text_write_string(fwrite, "0," + string(global.rock_tilex[i])
-        + "," + string(global.rock_tiley[i]) + "|");
-}
-file_text_writeln(fwrite);
-
-// Line 7
-file_text_write_string(fwrite, global.line7);
-file_text_writeln(fwrite);
-
-// Line 8
-file_text_write_string(fwrite, global.line8);
-file_text_writeln(fwrite);
-
-// Line 9
-file_text_write_string(fwrite, global.line9);
-file_text_writeln(fwrite);
-
-// Line 10: Abstract Room Nodes
-file_text_write_string(fwrite, global.line10);
-file_text_writeln(fwrite);
-// i'll worry about parsing this mess sometime in the distant future......
-
-// Line 11: Heatmap
-// hahahahaha, yeahh, good luck parsing this one...
-file_text_write_string(fwrite, global.line11);
-file_text_writeln(fwrite);
-
-// Line 12: Tile data
-var bitparse;
-for(i=0; i&lt;global.map_tile_width; i+=1) {
-    for(j=0; j&lt;global.map_tile_height; j+=1) {
-        file_text_write_string(fwrite, string(global.tile_type[i,j]));
-        if(global.has_wall[i,j])
-            file_text_write_string(fwrite, ",6");
-        bitparse = bitoption_to_savstring(global.tile_object_flag[i,j]);
-        if(bitparse != "")
-            file_text_write_string(fwrite, bitparse);
-        file_text_write_string(fwrite, "|");
+    file_text_writeln(fwrite);
+    
+    // Line 5: Border Type
+    file_text_write_string(fwrite, "Border: " + global.border_type);
+    file_text_writeln(fwrite);
+    
+    // Line 6: Spear/Rock Positions
+    for(i=0; i&lt;global.spear_count; i+=1) {
+        file_text_write_string(fwrite, "1," + string(global.spear_tilex[i])
+            + "," + string(global.spear_tiley[i]) + "|");
     }
+    for(i=0; i&lt;global.rock_count; i+=1) {
+        file_text_write_string(fwrite, "0," + string(global.rock_tilex[i])
+            + "," + string(global.rock_tiley[i]) + "|");
+    }
+    file_text_writeln(fwrite);
+    
+    // Line 7
+    file_text_write_string(fwrite, global.line7);
+    file_text_writeln(fwrite);
+    
+    // Line 8
+    file_text_write_string(fwrite, global.line8);
+    file_text_writeln(fwrite);
+    
+    // Line 9
+    file_text_write_string(fwrite, global.line9);
+    file_text_writeln(fwrite);
+    
+    // Line 10: Abstract Room Nodes
+    file_text_write_string(fwrite, global.line10);
+    file_text_writeln(fwrite);
+    // i'll worry about parsing this mess sometime in the distant future......
+    
+    // Line 11: Heatmap
+    // hahahahaha, yeahh, good luck parsing this one...
+    file_text_write_string(fwrite, global.line11);
+    file_text_writeln(fwrite);
+    
+    // Line 12: Tile data
+    var bitparse;
+    for(i=0; i&lt;global.map_tile_width; i+=1) {
+        for(j=0; j&lt;global.map_tile_height; j+=1) {
+            file_text_write_string(fwrite, string(global.tile_type[i,j]));
+            if(global.has_wall[i,j])
+                file_text_write_string(fwrite, ",6");
+            bitparse = bitoption_to_savstring(global.tile_object_flag[i,j]);
+            if(bitparse != "")
+                file_text_write_string(fwrite, bitparse);
+            file_text_write_string(fwrite, "|");
+        }
+    }
+    
+    show_message("Room saved successfully.");
+    
+    file_text_close(fwrite);
 }
-
-show_message("Room saved successfully.");
-
-file_text_close(fwrite);
+else {
+    show_message("You must load a room first!")
+}
 </string>
           </argument>
         </arguments>
@@ -249,8 +278,13 @@ file_text_close(fwrite);
           <argument>
             <kind>1</kind>
             <string>/// Rename room
-global.map_name = get_string("New room name?", global.map_name);
-
+if(global.map_name != "") {
+    global.map_name = get_string("New room name?", global.map_name);
+}
+else {
+    show_message("You must load a room first!");
+    exit;
+}
 </string>
           </argument>
         </arguments>
