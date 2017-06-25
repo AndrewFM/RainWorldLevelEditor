@@ -25,44 +25,14 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>// global editor variables
-global.map_image_count = 0;
-global.map_tile_width = 0;
-global.map_tile_height = 0;
-global.spear_count = 0;
-global.rock_count = 0;
-room_speed = 60; // 60 FPS!!!!!!!
-
-/// Initialize Editor Room Objects
-instance_create(0,0,obj_HUD);
-instance_create(0,0,obj_canvas);
-global.opacity_slider = instance_create(10, 50, obj_slider);
-
-global.button[0] = instance_create(0,0,obj_button);
-global.button[0].button_text = "View Mode";
-global.button[0].button_script = button_view_mode;
-
-global.button[1] = instance_create(0,0,obj_button);
-global.button[1].button_text = "Tile Edit Mode";
-global.button[1].button_script = button_tile_edit_mode;
-
-global.button[2] = instance_create(0,0,obj_button);
-global.button[2].button_text = "Wall Edit Mode";
-global.button[2].button_script = button_wall_edit_mode;
-
-global.button[3] = instance_create(0,0,obj_button);
-global.button[3].button_text = "Object Edit Mode";
-global.button[3].button_script = button_object_edit_mode;
-global.button_count = 4;
-global.current_mode = "View Mode";
-
-room_caption = "Rain World Level Editor";
+            <string>button_text = "undefined";
+button_width = 100;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="9" enumb="27">
+    <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -79,8 +49,33 @@ room_caption = "Rain World Level Editor";
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>/// Exit the program
-game_end();
+            <string>button_width = string_width(button_text)+10;
+hx1 = x;
+hy1 = y;
+hx2 = x+button_width;
+hy2 = y+string_height("A");
+
+if (visible &amp;&amp; mouse_x &gt;= hx1 &amp;&amp; mouse_x &lt;= hx2 &amp;&amp; mouse_y &gt;= hy1 &amp;&amp; mouse_y &lt;= hy2) {
+    hovering = true;
+    if (mouse_check_button_pressed(mb_left))
+        script_execute(button_script);
+}
+else
+    hovering = false;
+
+if (hovering)
+    draw_set_color(c_ltgray);
+else
+    draw_set_color(c_gray);
+draw_roundrect(hx1, hy1, hx2, hy2, false);
+draw_set_color(c_black);
+draw_roundrect(hx1, hy1, hx2, hy2, true);
+draw_set_halign(fa_center);
+draw_set_valign(fa_middle);
+draw_text((hx1+hx2)/2, (hy1+hy2)/2, button_text);
+draw_set_halign(fa_left);
+draw_set_valign(fa_top);
+
 </string>
           </argument>
         </arguments>

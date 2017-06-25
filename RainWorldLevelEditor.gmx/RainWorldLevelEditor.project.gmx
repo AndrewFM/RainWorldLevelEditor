@@ -28,12 +28,24 @@
     <script>scripts\snap_y.gml</script>
     <script>scripts\tileid_x.gml</script>
     <script>scripts\tileid_y.gml</script>
+    <script>scripts\render_tile_object_icon.gml</script>
+    <scripts name="Buttons">
+      <script>scripts\button_tile_edit_mode.gml</script>
+      <script>scripts\button_wall_edit_mode.gml</script>
+      <script>scripts\button_object_edit_mode.gml</script>
+      <script>scripts\button_view_mode.gml</script>
+    </scripts>
   </scripts>
+  <fonts name="fonts">
+    <font>fonts\ft_default</font>
+  </fonts>
   <objects name="objects">
     <object>objects\obj_viewinit</object>
     <object>objects\obj_HUD</object>
     <object>objects\obj_canvas</object>
     <object>objects\obj_editor</object>
+    <object>objects\obj_slider</object>
+    <object>objects\obj_button</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_viewinit</room>

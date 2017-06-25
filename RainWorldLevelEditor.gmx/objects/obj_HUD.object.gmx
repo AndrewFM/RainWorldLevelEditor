@@ -29,12 +29,37 @@
 x0 = view_xview[0];
 y0 = view_yview[0];
 
+draw_set_font(ft_default);
 draw_set_color(c_black);
-if (global.map_image_count == 0)
+if (global.map_image_count == 0) {
     draw_text(x0, y0, "No map loaded. Press 'L' to load a Rain World map data file.");
-else {
-    draw_text(x0, y0, "Loaded: "+string(global.map_name)+"#Tile Dimensions: "+string(global.map_tile_width)+"x"+string(global.map_tile_height));
+    global.opacity_slider.visible = false;
+    for(i=0; i&lt;global.button_count; i+=1) {
+        global.button[i].visible = false;
+    }
 }
+else {
+    draw_text(x0, y0, "Loaded: "+string(global.map_name)+"#Tile Dimensions: "+string(global.map_tile_width)+"x"+string(global.map_tile_height)+"#Map Opacity: #Current Mode: "+string(global.current_mode));
+    if (!global.opacity_slider.visible) {
+        global.opacity_slider.visible = true;
+        global.opacity_slider.x = x0+string_width("Map Opacity: ")+5;
+        global.opacity_slider.y = y0+string_height("A")*2.5;
+        global.opacity_slider.pos = global.opacity_slider.x + global.opacity_slider.bar_width;
+    }
+    draw_text(global.opacity_slider.x + global.opacity_slider.bar_width + global.opacity_slider.handle_width/2 + 5, 
+              y0+string_height("A")*2, string(ceil(global.opacity_slider.percent*100))+"%");
+    for(i=0; i&lt;global.button_count; i+=1) {
+        global.button[i].visible = true;
+        if (i == 0)
+            global.button[i].x = view_xview[0]+view_wview[0]-5-global.button[i].button_width;
+        else
+            global.button[i].x = global.button[i-1].x - global.button[i].button_width - 5;
+        global.button[i].y = y0+5;
+    }
+}
+
+draw_set_color(c_black);
+draw_line_width(x0, y0+view_hview[0], x0+view_wview[0], y0+view_hview[0], 5);
 </string>
           </argument>
         </arguments>
