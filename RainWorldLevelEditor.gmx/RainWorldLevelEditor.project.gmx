@@ -39,6 +39,7 @@
     </scripts>
     <script>scripts\get_pixellocfromred.gml</script>
     <script>scripts\clamp_wrap.gml</script>
+    <script>scripts\bitoption_to_savstring.gml</script>
   </scripts>
   <fonts name="fonts">
     <font>fonts\ft_default</font>

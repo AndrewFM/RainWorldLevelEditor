@@ -113,11 +113,11 @@ draw_line_width(x0, y0+view_hview[0], x0+view_wview[0], y0+view_hview[0], 5);
           <argument>
             <kind>1</kind>
             <string>/// Save a map file
-var img_filename, img_index, temp_name, base_filename, success, file, fread, line, linearr, linearr2, count, has_wall;
+var img_filename, img_index, temp_name, base_filename, success, file, fwrite, line, linearr, linearr2, count, has_wall;
 
 do {
     success = false;
-    file = get_open_filename("text file|*.txt", "");
+    file = get_save_filename("text file|*.txt", global.cur_map_file);
     if (string_pos("_Settings", file) != 0) {
         // User tried loading one of the Rain World map settings files,
         // rather than the map data file. Warn them and have them choose again.
@@ -129,162 +129,91 @@ do {
 if (file == "")
     exit; // User canceled the loading dialog.
 
-global.cur_map_file = file;
-unload_map_images();
+// Save images. Something to implement later.
 
-// Load cooresponding images.
-// Fun times begin here because of Game Maker Studio's sandboxing security bullshit.
-// So we have to make the user do some super unintuitive weird stuff here (the joys of using GM for stuff it's really not designed for...)
-// Basically it'll loop through the image files that need to be loaded, the user just needs to keep clicking the "Load" button, that's it.
-// Eventually it'll get to an image file that doesn't exist, at which point the user simply presses "Cancel". The end.
-// (We have to do it this way as GM requires the user to physically give permission to read a file if it's located outside of the sandbox)
-base_filename = string_delete(file, string_length(file)-3, 4);
-img_index = 1;
-while(true) {
-    img_filename = base_filename+"_"+string(img_index)+".png";
-    do {
-        temp_name = get_open_filename("PNG file|*.png", img_filename);
-    } until (temp_name == img_filename || temp_name == "")
-    if (temp_name == "")
-        break;
-    global.map_images[global.map_image_count] = sprite_add(img_filename, 0, false, false, 0, 0);
-    global.map_image_count += 1;
-    img_index += 1;
-}
-
-// Load map data from the text file.
-fread = file_text_open_read(file);
+// Open the map .txt file for writing
+fwrite = file_text_open_write(file);
 
 // Line 1: Map Name
-global.map_name = file_text_read_string(fread);
-file_text_readln(fread);
+file_text_write_string(fwrite, global.map_name);
+file_text_writeln(fwrite);
 
 // Line 2: Map size and water line
-line = file_text_read_string(fread);
-linearr = string_split(line, "|");
-if (linearr[0] != 3) {
-    show_message("Error parsing file, unrecognized format (line 2).");
-    unload_map_images();
-    file_text_close(fread);
-    exit;
-}
-global.water_height = real(linearr[2]);
-linearr2 = string_split2(linearr[1], "*");
-global.map_tile_width = real(linearr2[1]);
-global.map_tile_height = real(linearr2[2]);
-if (real(linearr[3]) == 1)
-    global.water_foreground = true;
-else
-    global.water_foreground = false;
-file_text_readln(fread);
+file_text_write_string(fwrite, (string(global.map_tile_width) + "*"
+    + string(global.map_tile_height) + "|"
+    + string(global.water_height) + "|"
+    + string(global.water_foreground)));
+file_text_writeln(fwrite);
 
 // Line 3: Light Direction
-line = file_text_read_string(fread);
-linearr = string_split(line, "|");
-linearr2 = string_split2(linearr[1], "*");
-if (linearr2[0] != 2) {
-    show_message("Error parsing file, unrecognized format (line 3).");
-    unload_map_images();
-    file_text_close(fread);
-    exit;
-}
-global.light_x = real(linearr2[1]);
-global.light_y = real(linearr2[2]);
-file_text_readln(fread);
+file_text_write_string(fwrite, string(global.light_x) + "*"
+    + string(global.light_y) + "|" + "0" + "|" + "0");
+file_text_writeln(fwrite);
 
 // Line 4: Camera Positions
-line = file_text_read_string(fread);
-linearr = string_split(line, "|");
-if (linearr[0] != global.map_image_count) {
-    show_message("Mismatched camera position definitions to loaded map images. Did you load all the screens for this map?");
-    unload_map_images();
-    file_text_close(fread);
-    exit;
-}
 for(i=0; i&lt;global.map_image_count; i+=1) {
-    linearr2 = string_split2(linearr[i+1], ",");
-    global.camera_x[i] = real(linearr2[1]);
-    global.camera_y[i] = real(linearr2[2]);
-}
-file_text_readln(fread);
-
-// Line 5: Border Type
-line = file_text_read_string(fread);
-global.border_type = string_delete(line, 1, 8);
-file_text_readln(fread);
-
-// Line 6: Spear/Rock Positions
-line = file_text_read_string(fread);
-linearr = string_split(line, "|");
-global.spear_count = 0;
-global.rock_count = 0;
-for(i=1; i&lt;=linearr[0]; i+=1) {
-    linearr2 = string_split2(linearr[i], ",");
-    if (linearr2[0] != 3)
-        continue;
-    if (real(linearr2[1]) == 1) {
-        // new spear spawn location
-        global.spear_tilex[global.spear_count] = real(linearr2[2]);
-        global.spear_tiley[global.spear_count] = real(linearr2[3]);
-        global.spear_count += 1;
-    } else {
-        // new rock spawn location
-        global.rock_tilex[global.rock_count] = real(linearr2[2]);
-        global.rock_tiley[global.rock_count] = real(linearr2[3]);
-        global.rock_count += 1;
+    file_text_write_string(fwrite, string(global.camera_x[i]) + ","
+        + string(global.camera_y[i]));
+    if((i + 1 &lt; global.map_image_count)) {
+        file_text_write_string(fwrite, "|");
     }
 }
-file_text_readln(fread);
+file_text_writeln(fwrite);
+
+// Line 5: Border Type
+file_text_write_string(fwrite, "Border: " + global.border_type);
+file_text_writeln(fwrite);
+
+// Line 6: Spear/Rock Positions
+for(i=0; i&lt;global.spear_count; i+=1) {
+    file_text_write_string(fwrite, "1," + string(global.spear_tilex[i])
+        + "," + string(global.spear_tiley[i]) + "|");
+}
+for(i=0; i&lt;global.rock_count; i+=1) {
+    file_text_write_string(fwrite, "0," + string(global.rock_tilex[i])
+        + "," + string(global.rock_tiley[i]) + "|");
+}
+file_text_writeln(fwrite);
 
 // Line 7
-global.line7 = file_text_read_string(fread); // always blank?
-file_text_readln(fread);
+file_text_write_string(fwrite, global.line7);
+file_text_writeln(fwrite);
 
 // Line 8
-global.line8 = file_text_read_string(fread); // always blank?
-file_text_readln(fread);
+file_text_write_string(fwrite, global.line8);
+file_text_writeln(fwrite);
 
 // Line 9
-global.line9 = file_text_read_string(fread); // always blank?
-file_text_readln(fread);
+file_text_write_string(fwrite, global.line9);
+file_text_writeln(fwrite);
 
 // Line 10: Abstract Room Nodes
-// just store the whole damn line for now so we can just plop it back in when saving the file. 
-global.line10 = file_text_read_string(fread); 
+file_text_write_string(fwrite, global.line10);
+file_text_writeln(fwrite);
 // i'll worry about parsing this mess sometime in the distant future......
-file_text_readln(fread);
 
 // Line 11: Heatmap
 // hahahahaha, yeahh, good luck parsing this one...
-global.line11 = file_text_read_string(fread);
-file_text_readln(fread);
+file_text_write_string(fwrite, global.line11);
+file_text_writeln(fwrite);
 
 // Line 12: Tile data
-line = file_text_read_string(fread);
-linearr = string_split(line, "|");
-if ((linearr[0]-1) != global.map_tile_width*global.map_tile_height) {
-    show_message("Number of tiles doesn't match map size? Map: ("+string(global.map_tile_width)+"x"+string(global.map_tile_height)+" = "+string(global.map_tile_width*global.map_tile_height)+"), Tile count: "+string(linearr[0]-1));
-    unload_map_images();
-    file_text_close(fread);
-    exit;    
-}
-count = 1;
 for(i=0; i&lt;global.map_tile_width; i+=1) {
     for(j=0; j&lt;global.map_tile_height; j+=1) {
-        linearr2 = string_split2(linearr[count], ",");
-        global.tile_type[i,j] = real(linearr2[1]);
-        global.tile_object_flag[i,j] = 0;
-        global.has_wall[i,j] = false;
-        for(k=2; k&lt;=linearr2[0]; k+=1) {
-            if (real(linearr2[k]) == 6) // Back Wall 
-                global.has_wall[i,j] = true;
-            else // Any other tile object other than back wall
-                global.tile_object_flag[i,j] |= get_bitoption(real(linearr2[k]));
+        file_text_write_string(fwrite, string(global.tile_type[i,j]));
+        if(global.has_wall[i,j]) {
+            file_text_write_string(fwrite, ",6");
         }
-        count += 1;
+        if(bitoption_to_savstring(global.tile_object_flag[i,j] != "")) {
+            file_text_write_string(fwrite, "," + bitoption_to_savstring(global.tile_object_flag[i,j]));
+        }
+        file_text_write_string(fwrite, "|");
     }
 }
-file_text_close(fread);
+
+show_message("Room saved successfully.");
+
+file_text_close(fwrite);
 </string>
           </argument>
         </arguments>
