@@ -114,7 +114,12 @@ tile_maxy = clamp(tileid_y(view_yview[1]+view_hview[1]), 0, global.map_tile_heig
 var tx, ty;
 if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_green);
-    draw_set_alpha(0.35);
+    if (global.current_mode == EDIT_PREVIEW)
+        draw_set_alpha(0.35);
+    else if (global.current_mode == EDIT_WALL)
+        draw_set_alpha(0.55);
+    else
+        draw_set_alpha(0);
     for(i=tile_minx; i&lt;=tile_maxx; i+=1) {
         for(j=tile_miny; j&lt;=tile_maxy; j+=1) {
             tx = ED_XOFF+i*TILE_SIZE;
@@ -128,7 +133,10 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 // Draw solid map tiles.
 if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_aqua);
-    draw_set_alpha(0.25);
+    if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_TILE)
+        draw_set_alpha(0.25);
+    else
+        draw_set_alpha(0.1);
     for(i=tile_minx; i&lt;=tile_maxx; i+=1) {
         for(j=tile_miny; j&lt;=tile_maxy; j+=1) {
             tx = ED_XOFF+i*TILE_SIZE;
@@ -161,7 +169,10 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 var tx, ty, has_exit;
 if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_yellow);
-    draw_set_alpha(0.75);
+    if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+        draw_set_alpha(0.75);
+    else
+        draw_set_alpha(0.2);
     for(i=tile_minx; i&lt;=tile_maxx; i+=1) {
         for(j=tile_miny; j&lt;=tile_maxy; j+=1) {
             if (global.tile_object_flag[i,j] == 0)
@@ -171,13 +182,21 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
             has_exit = false;
             for(k=0; k&lt;tile_object_count; k+=1) {
                 if (global.tile_object_flag[i,j] &amp; get_bitoption(tile_object_types[k]) == get_bitoption(tile_object_types[k])) {
-                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit)
-                        draw_set_alpha(0.25);
+                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit) {
+                        if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+                            draw_set_alpha(0.25);
+                        else
+                            draw_set_alpha(0.1);
+                    }
                     render_tile_object_icon(tile_object_types[k], tx, ty);
                     if (tile_object_types[k] == EXIT_MONSTER || tile_object_types[k] == EXIT_REGIONAL || tile_object_types[k] == EXIT_ROOM || tile_object_types[k] == EXIT_SCAV)
                         has_exit = true;
-                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit)
-                        draw_set_alpha(0.75);
+                    if (tile_object_types[k] == PIPE_PATH &amp;&amp; has_exit) {
+                        if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+                            draw_set_alpha(0.75);
+                        else
+                            draw_set_alpha(0.2);
+                    }
                 }
             }
         }
@@ -185,6 +204,10 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 }
 
 // Draw Spears/Rocks
+if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_OBJECT)
+    draw_set_alpha(0.75);
+else
+    draw_set_alpha(0.1);
 for(i=0; i&lt;global.spear_count; i+=1) {
     tx = ED_XOFF+global.spear_tilex[i]*TILE_SIZE;
     ty = ED_YOFF+global.spear_tiley[i]*TILE_SIZE;

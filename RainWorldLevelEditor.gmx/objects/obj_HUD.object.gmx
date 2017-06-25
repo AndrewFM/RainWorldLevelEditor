@@ -39,7 +39,14 @@ if (global.map_image_count == 0) {
     }
 }
 else {
-    draw_text(x0, y0, "Loaded: "+string(global.map_name)+"#Tile Dimensions: "+string(global.map_tile_width)+"x"+string(global.map_tile_height)+"#Map Opacity: #Current Mode: "+string(global.current_mode));
+    var mode_caption;
+    switch(global.current_mode) {
+        case EDIT_OBJECT: mode_caption = "Object Edit Mode"; break;
+        case EDIT_WALL: mode_caption = "Wall Edit Mode"; break;
+        case EDIT_TILE: mode_caption = "Tile Edit Mode"; break;
+        default: mode_caption = "View Mode";
+    }
+    draw_text(x0, y0, "Loaded: "+string(global.map_name)+"#Tile Dimensions: "+string(global.map_tile_width)+"x"+string(global.map_tile_height)+"#Map Opacity: #Current Mode: "+mode_caption);
     if (!global.opacity_slider.visible) {
         global.opacity_slider.visible = true;
         global.opacity_slider.x = x0+string_width("Map Opacity: ")+5;

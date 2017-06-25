@@ -1,1 +1,1 @@
-global.current_mode = "Tile Edit Mode";
+global.current_mode = EDIT_TILE;

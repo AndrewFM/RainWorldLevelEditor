@@ -1,1 +1,1 @@
-global.current_mode = "View Mode";
+global.current_mode = EDIT_PREVIEW;

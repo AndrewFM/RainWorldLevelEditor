@@ -1,1 +1,1 @@
-global.current_mode = "Object Edit Mode";
+global.current_mode = EDIT_OBJECT;

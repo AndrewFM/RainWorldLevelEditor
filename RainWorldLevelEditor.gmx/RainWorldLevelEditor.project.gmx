@@ -51,7 +51,7 @@
     <room>rooms\rm_viewinit</room>
     <room>rooms\rm_editor</room>
   </rooms>
-  <constants number="24">
+  <constants number="25">
     <constant name="EXIT_REGIONAL">12</constant>
     <constant name="WORM_GRASS">11</constant>
     <constant name="GARBAGE_HOLE">10</constant>
@@ -73,6 +73,7 @@
     <constant name="HUD_HEIGHT">80</constant>
     <constant name="ED_XOFF">0</constant>
     <constant name="ED_YOFF">160</constant>
+    <constant name="EDIT_PREVIEW">3</constant>
     <constant name="EDIT_OBJECT">2</constant>
     <constant name="EDIT_WALL">1</constant>
     <constant name="EDIT_TILE">0</constant>

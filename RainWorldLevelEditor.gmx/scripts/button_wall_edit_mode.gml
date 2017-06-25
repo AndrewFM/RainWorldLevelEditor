@@ -1,1 +1,1 @@
-global.current_mode = "Wall Edit Mode";
+global.current_mode = EDIT_WALL;

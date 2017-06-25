@@ -54,7 +54,7 @@ global.button[3] = instance_create(0,0,obj_button);
 global.button[3].button_text = "Object Edit Mode";
 global.button[3].button_script = button_object_edit_mode;
 global.button_count = 4;
-global.current_mode = "View Mode";
+global.current_mode = EDIT_PREVIEW;
 
 room_caption = "Rain World Level Editor";
 </string>
