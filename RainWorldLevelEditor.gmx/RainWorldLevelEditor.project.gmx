@@ -30,6 +30,7 @@
     <script>scripts\tileid_x.gml</script>
     <script>scripts\tileid_y.gml</script>
     <script>scripts\render_tile_object_icon.gml</script>
+    <script>scripts\render_tile_type_icon.gml</script>
     <scripts name="Buttons">
       <script>scripts\button_tile_edit_mode.gml</script>
       <script>scripts\button_wall_edit_mode.gml</script>

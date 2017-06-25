@@ -44,18 +44,26 @@ view_yview[1] = clamp(view_yview[1], ED_YOFF, max(ED_YOFF, ED_YOFF+(global.map_t
 if (mouse_wheel_up() || keyboard_check_pressed(vk_pageup)) {
     if (global.current_mode == EDIT_OBJECT) 
         global.object_selection = clamp_wrap(global.object_selection+1, 0, global.tile_object_count_special-1);
+    else if (global.current_mode == EDIT_TILE) 
+        global.tile_type_selection = clamp_wrap(global.tile_type_selection+1, 0, global.tile_type_count-1);
 }
 
 if (mouse_wheel_down() || keyboard_check_pressed(vk_pagedown)) {
     if (global.current_mode == EDIT_OBJECT) 
         global.object_selection = clamp_wrap(global.object_selection-1, 0, global.tile_object_count_special-1);
+    else if (global.current_mode == EDIT_TILE) 
+        global.tile_type_selection = clamp_wrap(global.tile_type_selection-1, 0, global.tile_type_count-1);
 }
 
 if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*TILE_SIZE 
  &amp;&amp; mouse_y &gt; ED_YOFF &amp;&amp; mouse_y &lt; ED_YOFF+global.map_tile_height*TILE_SIZE) {
     // Place objects at cursor
     if (mouse_check_button(mb_left)) {
-        if (global.current_mode == EDIT_OBJECT) {
+        if (global.current_mode == EDIT_WALL)
+            global.has_wall[tileid_x(mouse_x), tileid_y(mouse_y)] = true;
+        else if (global.current_mode == EDIT_TILE)
+            global.tile_type[tileid_x(mouse_x), tileid_y(mouse_y)] = global.tile_types[global.tile_type_selection];
+        else if (global.current_mode == EDIT_OBJECT) {
             if (global.tile_object_types[global.object_selection] == SPEAR_SPAWN) {
                 // First check that a spear is not already at this position.
                 var can_place = true;
@@ -93,7 +101,11 @@ if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*T
     
     // Delete objects at cursor
     if (mouse_check_button(mb_right)) {
-        if (global.current_mode == EDIT_OBJECT) {
+        if (global.current_mode == EDIT_WALL)
+            global.has_wall[tileid_x(mouse_x), tileid_y(mouse_y)] = false;
+     else if (global.current_mode == EDIT_TILE)
+        global.tile_type[tileid_x(mouse_x), tileid_y(mouse_y)] = AIR;
+        else if (global.current_mode == EDIT_OBJECT) {
             if (global.tile_object_types[global.object_selection] == SPEAR_SPAWN) {
                 // Find the spear
                 var spear_id = -1;
@@ -191,7 +203,7 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     }
 }
 
-// Draw solid map tiles.
+// Draw solid map tiles
 if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_aqua);
     if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_TILE)
@@ -202,24 +214,9 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
         for(j=tile_miny; j&lt;=tile_maxy; j+=1) {
             tx = ED_XOFF+i*TILE_SIZE;
             ty = ED_YOFF+j*TILE_SIZE;
-            if (global.tile_type[i,j] == SOLID)
-                draw_rectangle(tx, ty, tx+TILE_SIZE, ty+TILE_SIZE, false);
-            else if (global.tile_type[i,j] == PIPE_ENT)
-                draw_circle(tx+TILE_SIZE/2, ty+TILE_SIZE/2, TILE_SIZE/2, false);
-            else if (global.tile_type[i,j] == FLOOR)
-                draw_rectangle(tx, ty+TILE_SIZE*0.3, tx+TILE_SIZE, ty+TILE_SIZE*0.6, false);
-            else if (global.tile_type[i,j] == SLOPE) {
-                if ((i+1 &gt;= global.map_tile_width || global.tile_type[i+1,j] == AIR) 
-                 &amp;&amp; (j-1 &lt; 0 || global.tile_type[i,j-1] == AIR))
-                    draw_triangle(tx, ty, tx, ty+TILE_SIZE, tx+TILE_SIZE, ty+TILE_SIZE, false);
-                else if ((i-1 &lt; 0 || global.tile_type[i-1,j] == AIR)
-                 &amp;&amp; (j-1 &lt; 0 || global.tile_type[i,j-1] == AIR))
-                    draw_triangle(tx+TILE_SIZE, ty, tx+TILE_SIZE, ty+TILE_SIZE, tx, ty+TILE_SIZE, false);
-                else if ((i+1 &gt;= global.map_tile_width || global.tile_type[i+1,j] == AIR)
-                 &amp;&amp; (j+1 &gt;= global.map_tile_height || global.tile_type[i,j+1] == AIR))
-                    draw_triangle(tx, ty, tx, ty+TILE_SIZE, tx+TILE_SIZE, ty, false);
-                else
-                    draw_triangle(tx+TILE_SIZE, ty, tx+TILE_SIZE, ty+TILE_SIZE, tx, ty, false);
+            for(k=0; k&lt;global.tile_type_count; k+=1) {
+                if (global.tile_type[i,j] == global.tile_types[k])
+                    render_tile_type_icon(global.tile_types[k], tx, ty);
             }
         }
     }
@@ -284,6 +281,9 @@ for(i=0; i&lt;global.rock_count; i+=1) {
 if (global.current_mode == EDIT_OBJECT) {
     draw_set_color(c_lime);
     draw_set_alpha(1);
+} else if (global.current_mode == EDIT_TILE) {
+    draw_set_color(c_aqua);
+    draw_set_alpha(1);
 } else {
     draw_set_color(c_green);
     draw_set_alpha(0.5);
@@ -292,9 +292,26 @@ if (global.current_mode != EDIT_PREVIEW &amp;&amp; mouse_x &gt; ED_XOFF &amp;&am
  &amp;&amp; mouse_y &gt; ED_YOFF &amp;&amp; mouse_y &lt; ED_YOFF+global.map_tile_height*TILE_SIZE) {
     if (global.current_mode == EDIT_WALL)
         draw_rectangle(snap_x(mouse_x), snap_y(mouse_y), snap_x(mouse_x)+TILE_SIZE, snap_y(mouse_y)+TILE_SIZE, false);
+    else if (global.current_mode == EDIT_TILE)
+        render_tile_type_icon(global.tile_types[global.tile_type_selection], snap_x(mouse_x), snap_y(mouse_y));
     else if (global.current_mode == EDIT_OBJECT)
         render_tile_object_icon(global.tile_object_types[global.object_selection], snap_x(mouse_x), snap_y(mouse_y));
+    
+    // Draw small cross-hair in place of mouse cursor.
     window_set_cursor(cr_none);
+    draw_set_color(c_white);
+    draw_set_alpha(1);
+    draw_point(mouse_x, mouse_y);
+    for(i=1; i&lt;=3; i+=1) {
+        if (i &gt; 1)
+            draw_set_color(c_black);
+        else
+            draw_set_color(c_white);
+        draw_point(mouse_x-i, mouse_y);
+        draw_point(mouse_x+i, mouse_y);
+        draw_point(mouse_x, mouse_y-i);
+        draw_point(mouse_x, mouse_y+i);
+    }
 } else
     window_set_cursor(cr_arrow);
 draw_set_color(c_white);

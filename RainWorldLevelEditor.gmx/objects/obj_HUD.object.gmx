@@ -66,7 +66,18 @@ else {
 }
 
 draw_set_color(c_black);
-if (global.current_mode == EDIT_OBJECT) {
+if (global.current_mode == EDIT_TILE) {
+    draw_set_halign(fa_right);
+    draw_text(view_xview[0]+view_wview[0]-5, y0+10+string_height("A"), "Selected Tile: "+global.tile_captions[global.tile_type_selection]);
+    draw_set_halign(fa_left);
+    for(i=0; i&lt;global.tile_type_count; i+=1) {
+        if (i != global.tile_type_selection)
+            draw_set_alpha(0.15);
+        render_tile_type_icon(global.tile_types[i], view_xview[0]+view_wview[0]-5-(i+1)*(TILE_SIZE+5), y0+15+string_height("A")*2);
+        draw_set_alpha(1);
+    }
+}
+else if (global.current_mode == EDIT_OBJECT) {
     draw_set_halign(fa_right);
     draw_text(view_xview[0]+view_wview[0]-5, y0+10+string_height("A"), "Selected Object: "+global.tile_object_captions[global.object_selection]);
     draw_set_halign(fa_left);
@@ -301,7 +312,7 @@ var img_filename, img_index, temp_name, base_filename, success, file, fread, lin
 
 do {
     success = false;
-    file = get_open_filename("text file|*.txt", "");
+    file = get_open_filename("Rain World Map Data|*.txt", "");
     if (string_pos("_Settings", file) != 0) {
         // User tried loading one of the Rain World map settings files,
         // rather than the map data file. Warn them and have them choose again.
@@ -327,7 +338,7 @@ img_index = 1;
 while(true) {
     img_filename = base_filename+"_"+string(img_index)+".png";
     do {
-        temp_name = get_open_filename("PNG file|*.png", img_filename);
+        temp_name = get_open_filename("Rain World Map Image|*.png", img_filename);
     } until (temp_name == img_filename || temp_name == "")
     if (temp_name == "")
         break;

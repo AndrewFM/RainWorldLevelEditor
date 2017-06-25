@@ -62,6 +62,17 @@ global.tile_object_captions[12] = "Rock Spawner";
 global.tile_object_count = 11;
 global.tile_object_count_special = 13;
 
+global.tile_types[0] = SOLID;
+global.tile_types[1] = SLOPE;
+global.tile_types[2] = FLOOR;
+global.tile_types[3] = PIPE_ENT;
+global.tile_captions[0] = "Solid Block";
+global.tile_captions[1] = "Sloped Block";
+global.tile_captions[2] = "Jump-Through Platform";
+global.tile_captions[3] = "Pipe Entrance";
+global.tile_type_count = 4;
+
+
 /// Initialize Editor Room Objects
 instance_create(0,0,obj_HUD);
 instance_create(0,0,obj_canvas);
@@ -84,6 +95,7 @@ global.button[3].button_text = "Object Edit Mode";
 global.button[3].button_script = button_object_edit_mode;
 global.button_count = 4;
 global.object_selection = 0;
+global.tile_type_selection = 0;
 global.current_mode = EDIT_PREVIEW;
 
 room_caption = "Rain World Level Editor";
