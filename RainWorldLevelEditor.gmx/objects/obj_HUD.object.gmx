@@ -146,8 +146,8 @@ file_text_write_string(fwrite, (string(global.map_tile_width) + "*"
 file_text_writeln(fwrite);
 
 // Line 3: Light Direction
-file_text_write_string(fwrite, string(global.light_x) + "*"
-    + string(global.light_y) + "|" + "0" + "|" + "0");
+file_text_write_string(fwrite, string_precision(global.light_x, 4) + "*"
+    + string_precision(global.light_y, 4) + "|" + "0" + "|" + "0");
 file_text_writeln(fwrite);
 
 // Line 4: Camera Positions
@@ -198,15 +198,15 @@ file_text_write_string(fwrite, global.line11);
 file_text_writeln(fwrite);
 
 // Line 12: Tile data
+var bitparse;
 for(i=0; i&lt;global.map_tile_width; i+=1) {
     for(j=0; j&lt;global.map_tile_height; j+=1) {
         file_text_write_string(fwrite, string(global.tile_type[i,j]));
-        if(global.has_wall[i,j]) {
+        if(global.has_wall[i,j])
             file_text_write_string(fwrite, ",6");
-        }
-        if(bitoption_to_savstring(global.tile_object_flag[i,j] != "")) {
-            file_text_write_string(fwrite, "," + bitoption_to_savstring(global.tile_object_flag[i,j]));
-        }
+        bitparse = bitoption_to_savstring(global.tile_object_flag[i,j]);
+        if(bitparse != "")
+            file_text_write_string(fwrite, bitparse);
         file_text_write_string(fwrite, "|");
     }
 }
