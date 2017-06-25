@@ -27,6 +27,8 @@
             <kind>1</kind>
             <string>water_hovering = false;
 water_selected = false;
+light_hovering = false;
+light_selected = false;
 </string>
           </argument>
         </arguments>
@@ -297,7 +299,7 @@ if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_PROPERTIE
         wy1 = wliney;
         wy2 = ED_YOFF+global.map_tile_height*TILE_SIZE;
         
-        if (global.current_mode == EDIT_PROPERTIES &amp;&amp; mouse_x &gt;= wx1 &amp;&amp; mouse_x &lt;= wx2 &amp;&amp; mouse_y &gt;= wy1 &amp;&amp; mouse_y &lt;= wy2) {
+        if (global.current_mode == EDIT_PROPERTIES &amp;&amp; mouse_x &gt;= wx1 &amp;&amp; mouse_x &lt;= wx2 &amp;&amp; mouse_y &gt;= wy1 &amp;&amp; mouse_y &lt;= wy2 &amp;&amp; !light_hovering &amp;&amp; !light_selected) {
             water_hovering = true;
             if (mouse_check_button(mb_left))
                 water_selected = true;
@@ -322,6 +324,46 @@ if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_PROPERTIE
         draw_set_alpha(0.75);
         draw_line_width(wx1, wy1, wx2, wy1, 5);
     }
+}
+
+// Draw light controller
+if (global.current_mode == EDIT_PROPERTIES) {
+    var cx, cy, light_dir, light_len;
+    cx = view_xview[1]+view_wview[1]/2;
+    cy = view_yview[1]+view_hview[1]/2;
+    light_dir = point_direction(0, 0, global.light_x*LIGHT_EXFACTOR, global.light_y*LIGHT_EXFACTOR);
+    light_len = point_distance(0, 0, global.light_x*LIGHT_EXFACTOR, global.light_y*LIGHT_EXFACTOR);
+    
+    if (point_distance(cx, cy, mouse_x, mouse_y) &lt;= light_len &amp;&amp; !water_selected) {
+        light_hovering = true;
+        if (mouse_check_button(mb_left) &amp;&amp; !water_selected)
+            light_selected = true;
+    }
+    else
+        light_hovering = false;
+    if (!mouse_check_button(mb_left) || global.current_mode != EDIT_PROPERTIES)
+        light_selected = false;
+        
+    if (light_selected) {
+        global.light_x = (cx-mouse_x)/LIGHT_EXFACTOR;
+        global.light_y = (cy-mouse_y)/LIGHT_EXFACTOR;
+    }
+    
+    draw_set_color(c_orange);
+    if (light_hovering || light_selected)
+        draw_set_alpha(0.5);
+    else
+        draw_set_alpha(0.25);
+    draw_circle(cx, cy, light_len, false);
+    draw_set_color(make_color_rgb(228, 189, 54));
+    draw_set_alpha(1);
+    draw_circle(cx, cy, light_len, true);
+    draw_sprite_ext(spr_light, 0, cx, cy, 1, 1, 0, draw_get_color(), draw_get_alpha());
+    draw_line_width(cx, cy, cx+global.light_x*LIGHT_EXFACTOR, cy+global.light_y*LIGHT_EXFACTOR, 3); 
+    draw_line_width(cx+global.light_x*LIGHT_EXFACTOR, cy+global.light_y*LIGHT_EXFACTOR, 
+                    cx+global.light_x*LIGHT_EXFACTOR+lengthdir_x(20,light_dir+200), cy+global.light_y*LIGHT_EXFACTOR+lengthdir_y(20,light_dir+200), 3); 
+    draw_line_width(cx+global.light_x*LIGHT_EXFACTOR, cy+global.light_y*LIGHT_EXFACTOR, 
+                    cx+global.light_x*LIGHT_EXFACTOR+lengthdir_x(20, light_dir+160), cy+global.light_y*LIGHT_EXFACTOR+lengthdir_y(20,light_dir+160), 3); 
 }
 
 // Draw our editing cursor over the tile currently being hovered on.

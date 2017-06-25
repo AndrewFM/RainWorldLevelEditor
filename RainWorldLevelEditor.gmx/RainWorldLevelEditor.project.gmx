@@ -17,6 +17,7 @@
     <sprite>sprites\spr_wormgrass</sprite>
     <sprite>sprites\spr_garbagehole</sprite>
     <sprite>sprites\spr_waterfall</sprite>
+    <sprite>sprites\spr_light</sprite>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
@@ -67,7 +68,7 @@
     <room>rooms\rm_viewinit</room>
     <room>rooms\rm_editor</room>
   </rooms>
-  <constants number="28">
+  <constants number="29">
     <constant name="ROCK_SPAWN">14</constant>
     <constant name="SPEAR_SPAWN">13</constant>
     <constant name="EXIT_REGIONAL">12</constant>
@@ -87,6 +88,7 @@
     <constant name="SLOPE">2</constant>
     <constant name="SOLID">1</constant>
     <constant name="AIR">0</constant>
+    <constant name="LIGHT_EXFACTOR">25</constant>
     <constant name="TILE_SIZE">20</constant>
     <constant name="HUD_HEIGHT">80</constant>
     <constant name="ED_XOFF">0</constant>
