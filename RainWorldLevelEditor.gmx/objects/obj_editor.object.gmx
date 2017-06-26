@@ -129,7 +129,31 @@ global.object_selection = 0;
 global.tile_type_selection = 0;
 global.current_mode = EDIT_PREVIEW;
 
-room_caption = "Rain World Level Editor";
+room_caption = "Rain World Level Editor (Beta 1.1)";
+window_set_caption(room_caption);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="9" enumb="112">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>button_help();
 </string>
           </argument>
         </arguments>

@@ -29,6 +29,7 @@
 water_selected = false;
 light_hovering = false;
 light_selected = false;
+selected_screen = 0;
 </string>
           </argument>
         </arguments>
@@ -183,8 +184,27 @@ if (mouse_x &gt; ED_XOFF &amp;&amp; mouse_x &lt; ED_XOFF+global.map_tile_width*T
             <kind>1</kind>
             <string>// Draw all of the map images.
 if (global.map_image_count &gt; 0) {
+    var map_alpha, map_color;
     for(i=0; i&lt;global.map_image_count; i+=1) {
-        draw_sprite_ext(global.map_images[i], 0, ED_XOFF+global.camera_x[i], ED_YOFF+global.camera_y[i], 1, 1, 0, c_white, global.opacity_slider.percent);
+        map_color = c_white;
+        if (global.current_mode == EDIT_SCREEN) {
+            if (i == selected_screen)
+                map_alpha = 1; 
+            else {
+                map_alpha = 0.15;
+                if (mouse_x &gt; ED_XOFF+global.camera_x[i] &amp;&amp; mouse_y &gt; ED_YOFF+global.camera_y[i]
+                    &amp;&amp; mouse_x &lt; ED_XOFF+global.camera_x[i]+sprite_get_width(global.map_images[i])
+                    &amp;&amp; mouse_y &lt; ED_YOFF+global.camera_y[i]+sprite_get_height(global.map_images[i])) {
+                    map_color = c_red;
+                    map_alpha = 0.5;
+                    if (mouse_check_button_pressed(mb_left))
+                        selected_screen = i;
+                }
+            }
+        }
+        else
+            map_alpha = global.opacity_slider.percent;
+        draw_sprite_ext(global.map_images[i], 0, ED_XOFF+global.camera_x[i], ED_YOFF+global.camera_y[i], 1, 1, 0, map_color, map_alpha);
     }
 }
 
@@ -220,6 +240,8 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
     draw_set_color(c_aqua);
     if (global.current_mode == EDIT_PREVIEW || global.current_mode == EDIT_TILE)
         draw_set_alpha(0.25);
+    else if (global.current_mode == EDIT_SCREEN)
+        draw_set_alpha(0.15);
     else
         draw_set_alpha(0.1);
     for(i=tile_minx; i&lt;=tile_maxx; i+=1) {
@@ -249,6 +271,8 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
             for(k=0; k&lt;global.tile_object_count; k+=1) {
                 if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == global.tile_object_types[k]))
                     draw_set_alpha(0.75);
+                else if (global.current_mode == EDIT_SCREEN)
+                    draw_set_alpha(0);
                 else
                     draw_set_alpha(0.2);
                 if (global.tile_object_flag[i,j] &amp; get_bitoption(global.tile_object_types[k]) == get_bitoption(global.tile_object_types[k])) {
@@ -257,6 +281,8 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
                             draw_set_alpha(0.25);
                         else if (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == global.tile_object_types[k])
                             draw_set_alpha(0.75);
+                        else if (global.current_mode == EDIT_SCREEN)
+                            draw_set_alpha(0);
                         else
                             draw_set_alpha(0.1);
                     }
@@ -272,6 +298,8 @@ if (global.map_tile_width &gt; 0 &amp;&amp; global.map_tile_height &gt; 0) {
 // Draw Spears/Rocks
 if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == SPEAR_SPAWN))
     draw_set_alpha(0.75);
+else if (global.current_mode == EDIT_SCREEN)
+    draw_set_alpha(0);
 else
     draw_set_alpha(0.1);
 for(i=0; i&lt;global.spear_count; i+=1) {
@@ -281,6 +309,8 @@ for(i=0; i&lt;global.spear_count; i+=1) {
 }
 if (global.current_mode == EDIT_PREVIEW || (global.current_mode == EDIT_OBJECT &amp;&amp; global.tile_object_types[global.object_selection] == ROCK_SPAWN))
     draw_set_alpha(0.75);
+else if (global.current_mode == EDIT_SCREEN)
+    draw_set_alpha(0);
 else
     draw_set_alpha(0.1);
 for(i=0; i&lt;global.rock_count; i+=1) {

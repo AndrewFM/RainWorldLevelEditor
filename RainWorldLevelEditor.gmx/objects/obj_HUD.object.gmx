@@ -70,6 +70,7 @@ else {
         case EDIT_WALL: mode_caption = "Wall Edit Mode"; break;
         case EDIT_TILE: mode_caption = "Tile Edit Mode"; break;
         case EDIT_PROPERTIES: mode_caption = "Properties Edit Mode"; break;
+        case EDIT_SCREEN: mode_caption = "Screen Edit Mode"; break;
         default: mode_caption = "View Mode";
     }
     draw_text(x0, y0, "Loaded: "+string(global.map_name)+"#Tile Dimensions: "+string(global.map_tile_width)+"x"+string(global.map_tile_height)+"#Map Opacity: #Current Mode: "+mode_caption);
@@ -225,7 +226,7 @@ if(global.map_name != "") {
     file_text_writeln(fwrite);
     
     // Line 10: Abstract Room Nodes
-    file_text_write_string(fwrite, global.line10);
+    file_text_write_string(fwrite, "0|"+string_delete(global.line10, 1, string_pos("|", global.line10)));
     file_text_writeln(fwrite);
     // i'll worry about parsing this mess sometime in the distant future......
     
