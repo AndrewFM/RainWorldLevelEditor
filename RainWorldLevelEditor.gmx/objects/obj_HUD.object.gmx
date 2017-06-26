@@ -327,6 +327,7 @@ if (file == "")
 global.cur_map_file = file;
 unload_map_images();
 
+show_message("At this point, more file dialogs will open. Don't do anything other than keep clicking the 'Open' button until you get a message that a file isn't found. When that finally happens, click 'Cancel'.");
 // Load cooresponding images.
 // Fun times begin here because of Game Maker Studio's sandboxing security bullshit.
 // So we have to make the user do some super unintuitive weird stuff here (the joys of using GM for stuff it's really not designed for...)
