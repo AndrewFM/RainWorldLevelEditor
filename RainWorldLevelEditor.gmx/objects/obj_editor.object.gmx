@@ -100,14 +100,18 @@ global.button[4].button_text = "Edit Properties";
 global.button[4].button_script = button_properties_edit_mode;
 
 global.button[5] = instance_create(0,0,obj_button);
-global.button[5].button_text = "Resize Map";
-global.button[5].button_script = button_resize_map;
+global.button[5].button_text = "Edit Screens";
+global.button[5].button_script = button_screen_edit_mode;
 
 global.button[6] = instance_create(0,0,obj_button);
-global.button[6].button_text = "Help";
-global.button[6].button_script = button_help;
+global.button[6].button_text = "Resize Map";
+global.button[6].button_script = button_resize_map;
 
-global.button_count = 7;
+global.button[7] = instance_create(0,0,obj_button);
+global.button[7].button_text = "Help";
+global.button[7].button_script = button_help;
+
+global.button_count = 8;
 
 global.check[0] = instance_create(0,0,obj_checkmark);
 global.check[0].checkmark_text = "Water enabled";

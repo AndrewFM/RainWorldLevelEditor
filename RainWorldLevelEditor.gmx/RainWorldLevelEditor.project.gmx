@@ -34,6 +34,7 @@
       <script>scripts\check_waterlevel_enable.gml</script>
       <script>scripts\check_waterlevel_disable.gml</script>
       <script>scripts\button_help.gml</script>
+      <script>scripts\button_screen_edit_mode.gml</script>
     </scripts>
     <script>scripts\unload_map_images.gml</script>
     <script>scripts\string_split.gml</script>
@@ -69,7 +70,7 @@
     <room>rooms\rm_viewinit</room>
     <room>rooms\rm_editor</room>
   </rooms>
-  <constants number="29">
+  <constants number="30">
     <constant name="ROCK_SPAWN">14</constant>
     <constant name="SPEAR_SPAWN">13</constant>
     <constant name="EXIT_REGIONAL">12</constant>
@@ -94,6 +95,7 @@
     <constant name="HUD_HEIGHT">80</constant>
     <constant name="ED_XOFF">0</constant>
     <constant name="ED_YOFF">160</constant>
+    <constant name="EDIT_SCREEN">5</constant>
     <constant name="EDIT_PROPERTIES">4</constant>
     <constant name="EDIT_PREVIEW">3</constant>
     <constant name="EDIT_OBJECT">2</constant>
