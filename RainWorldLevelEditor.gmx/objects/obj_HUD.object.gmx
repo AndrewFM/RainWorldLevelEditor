@@ -359,26 +359,38 @@ file_text_readln(fread);
 // Line 2: Map size and water line
 line = file_text_read_string(fread);
 linearr = string_split(line, "|");
-if (linearr[0] != 3) {
+
+if (linearr[0] == 3) {
+    global.water_height = real(linearr[2]);
+    linearr2 = string_split2(linearr[1], "*");
+    global.map_tile_width = real(linearr2[1]);
+    global.map_tile_height = real(linearr2[2]);
+    if (real(linearr[3]) == 1)
+        global.water_foreground = true;
+    else
+        global.water_foreground = false;
+
+    if (global.water_height) &gt; 0
+        global.check[0].toggled = true;
+    else
+        global.check[0].toggled = false;
+    global.check[1].toggled = global.water_foreground;
+}
+else if (linearr[0] == 1) {
+    global.water_height = -1;
+    linearr2 = string_split2(linearr[1], "*");
+    global.map_tile_width = real(linearr2[1]);
+    global.map_tile_height = real(linearr2[2]);
+    global.water_foreground = false;
+    global.check[0].toggled = false;
+    global.check[1].toggled = false;
+}
+else {
     show_message("Error parsing file, unrecognized format (line 2).");
     unload_map_images();
     file_text_close(fread);
     exit;
 }
-global.water_height = real(linearr[2]);
-linearr2 = string_split2(linearr[1], "*");
-global.map_tile_width = real(linearr2[1]);
-global.map_tile_height = real(linearr2[2]);
-if (real(linearr[3]) == 1)
-    global.water_foreground = true;
-else
-    global.water_foreground = false;
-
-if (global.water_height) &gt; 0
-    global.check[0].toggled = true;
-else
-    global.check[0].toggled = false;
-global.check[1].toggled = global.water_foreground;
     
 file_text_readln(fread);
 
